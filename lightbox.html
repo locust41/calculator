@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Выбор калькулятора</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --neon-blue: #00ffff;
+    --neon-pink: #ff00cc;
+    --text-light: #ffffff;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Russo One', sans-serif;
+    background: url('/page.png') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    position: relative;
+    max-width: 450px;
+    width: 100%;
+    background: rgba(10,10,10,0.85);
+    padding: 20px 25px;
+    border-radius: 16px;
+    box-shadow: 0 0 40px var(--neon-blue), 0 0 80px var(--neon-blue);
+    z-index: 1;
+  }
+
+  /* Динамическая подсветка сзади контейнера */
+  .container::before {
+    content: "";
+    position: absolute;
+    top: -25px;
+    left: -25px;
+    right: -25px;
+    bottom: -25px;
+    border-radius: 20px;
+    background: linear-gradient(270deg, var(--neon-blue), var(--neon-pink));
+    filter: blur(25px);
+    opacity: 0.7;
+    animation: neonPulse 4s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes neonPulse {
+    0%, 100% {
+      filter: blur(25px);
+      opacity: 0.7;
+      background-position: 0% 50%;
+    }
+    50% {
+      filter: blur(35px);
+      opacity: 1;
+      background-position: 100% 50%;
+    }
+  }
+
+  h1 {
+    color: var(--neon-pink);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 4px 8px;
+    border: 2px solid var(--neon-pink);
+    border-radius: 12px;
+    text-shadow: 0 0 2px var(--neon-pink);
+    box-shadow: 0 0 8px var(--neon-pink);
+    background-color: rgba(0,0,0,0.4);
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 6px;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  input, select {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.1rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background-color: #111;
+    color: white;
+    box-shadow: inset 0 0 5px var(--neon-blue);
+    outline: none;
+    appearance: none;
+  }
+
+  input:focus, select:focus {
+    box-shadow: 0 0 12px var(--neon-pink);
+  }
+
+  button {
+    margin-top: 25px;
+    padding: 15px 0;
+    font-size: 1.4rem;
+    background: var(--neon-pink);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--neon-pink);
+    transition: background 0.3s ease;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  button:hover {
+    background: #e600b8;
+    box-shadow: 0 0 25px #e600b8;
+  }
+
+
+.calculator-tab {
+  display: none;
+}
+
+#neon-calculator {
+  display: block; /* показываем по умолчанию только один */
+}
+
+.calculator-tabs {
+  display: flex;
+  flex-direction: column;  /* кнопки в колонку */
+  gap: 12px;               /* расстояние между кнопками */
+  width: 250px;            /* или нужная тебе ширина */
+  margin: 0 auto;          /* по центру контейнера */
+}
+
+.tab-button {
+  background-color: #1e1e1e;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 12px 20px;      /* увеличил паддинги для крупнее кнопок */
+  margin: 0;               /* убрал неправильное значение */
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 18px;         /* крупнее шрифт */
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  width: 100%;             /* кнопка на всю ширину контейнера */
+  box-sizing: border-box;
+}
+
+
+.tab-button:hover {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #666;
+}
+
+.tab-button.active {
+  background-color: #3a3a3a;
+  color: #fff;
+  border-color: #888;
+}
+
+
+
+  #result {
+    margin-top: 25px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+    text-align: center;
+    padding: 15px 10px;
+    border: 2px solid var(--neon-blue);
+    border-radius: 12px;
+    box-shadow: 0 0 12px var(--neon-blue);
+    background-color: rgba(0,0,0,0.6);
+    user-select: none;
+    min-height: 50px;
+    font-family: 'Russo One', sans-serif;
+  }
+
+.form-group {
+  margin-bottom: 5px;
+}
+
+/* Основной контейнер на одной строке */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Надпись */
+.checkbox-label {
+  font-size: 1rem;
+  color: white;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Кастомный чекбокс */
+.custom-checkbox {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--neon-blue);
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.custom-checkbox:checked {
+  background-color: var(--neon-blue);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* Галочка внутри */
+.custom-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 7px;
+  width: 6px;
+  height: 12px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.custom-checkbox:checked::after {
+  opacity: 1;
+}
+
+
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Выбор калькулятора "Световой лайтбокс"</h1>
+    <div class="calculator-tabs">
+      <button class="tab-button" onclick="window.location.href='/lightbox/lightbox-single.html'">Односторонний световой лайтбокс</button>
+      <button class="tab-button" onclick="window.location.href='/lightbox/lightbox-double.html'">Двухсторонний световой лайтбокс</button>
+      <button class="tab-button" onclick="window.location.href='/lightbox/lightbox-standard.html'">Световой лайтбокс</button>
+      <button class="tab-button" onclick="window.location.href='/lightbox/lightbox-full.html'">Полностью светящийся лайтбокс</button>
+      <button class="tab-button" onclick="window.location.href='/index.html'"><< Назад</button>
+    </div>
+  </div>
+<script>
+   const buttons = document.querySelectorAll('.block-button'); //block-button в class="tab-button block-button" прописать если нужно заблочить
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    btn.style.backgroundColor = '#000';
+    btn.style.color = '#888';
+    btn.style.cursor = 'not-allowed';
+    btn.onclick = null;
+  });
+</script>
+
+</body>
+</html>
