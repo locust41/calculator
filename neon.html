@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Калькулятор неоновых вывесок</title>
+
+<!-- Подключаем Russo One -->
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --neon-blue: #00ffff;
+    --neon-pink: #ff00cc;
+    --text-light: #ffffff;
+  }
+
+  body {
+    margin: 0;
+    padding: 20px;
+    font-family: 'Russo One', sans-serif;
+    background: url('/page.png') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    position: relative;
+    max-width: 450px;
+    width: 100%;
+    background: rgba(10,10,10,0.85);
+    padding: 20px 25px;
+    border-radius: 16px;
+    box-shadow: 0 0 40px var(--neon-blue), 0 0 80px var(--neon-blue);
+    z-index: 1;
+  }
+
+  /* Динамическая подсветка сзади контейнера */
+  .container::before {
+    content: "";
+    position: absolute;
+    top: -25px;
+    left: -25px;
+    right: -25px;
+    bottom: -25px;
+    border-radius: 20px;
+    background: linear-gradient(270deg, var(--neon-blue), var(--neon-pink));
+    filter: blur(25px);
+    opacity: 0.7;
+    animation: neonPulse 4s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  @keyframes neonPulse {
+    0%, 100% {
+      filter: blur(25px);
+      opacity: 0.7;
+      background-position: 0% 50%;
+    }
+    50% {
+      filter: blur(35px);
+      opacity: 1;
+      background-position: 100% 50%;
+    }
+  }
+
+  h1 {
+    color: var(--neon-pink);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 4px 8px;
+    border: 2px solid var(--neon-pink);
+    border-radius: 12px;
+    text-shadow: 0 0 2px var(--neon-pink);
+    box-shadow: 0 0 8px var(--neon-pink);
+    background-color: rgba(0,0,0,0.4);
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 6px;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  input, select {
+    font-family: 'Russo One', sans-serif;
+    font-size: 1.1rem;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    background-color: #111;
+    color: white;
+    box-shadow: inset 0 0 5px var(--neon-blue);
+    outline: none;
+    appearance: none;
+  }
+
+  input:focus, select:focus {
+    box-shadow: 0 0 12px var(--neon-pink);
+  }
+
+  button {
+    margin-top: 25px;
+    padding: 15px 0;
+    font-size: 1.4rem;
+    background: var(--neon-pink);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--neon-pink);
+    transition: background 0.3s ease;
+    font-family: 'Russo One', sans-serif;
+  }
+
+  button:hover {
+    background: #e600b8;
+    box-shadow: 0 0 25px #e600b8;
+  }
+
+
+.calculator-tab {
+  display: none;
+}
+
+#neon-calculator {
+  display: block; /* показываем по умолчанию только один */
+}
+
+.calculator-tabs {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+
+.tab-button {
+  background-color: #1e1e1e;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px 10px;
+  margin: 1 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.tab-button:hover {
+  background-color: #2a2a2a;
+  color: #fff;
+  border-color: #666;
+}
+
+.tab-button.active {
+  background-color: #3a3a3a;
+  color: #fff;
+  border-color: #888;
+}
+
+
+
+  #result {
+    margin-top: 25px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--neon-blue);
+    text-align: center;
+    padding: 15px 10px;
+    border: 2px solid var(--neon-blue);
+    border-radius: 12px;
+    box-shadow: 0 0 12px var(--neon-blue);
+    background-color: rgba(0,0,0,0.6);
+    user-select: none;
+    min-height: 50px;
+    font-family: 'Russo One', sans-serif;
+  }
+
+.form-group {
+  margin-bottom: 5px;
+}
+
+/* Основной контейнер на одной строке */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Надпись */
+.checkbox-label {
+  font-size: 1rem;
+  color: white;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Кастомный чекбокс */
+.custom-checkbox {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--neon-blue);
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.custom-checkbox:checked {
+  background-color: var(--neon-blue);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+/* Галочка внутри */
+.custom-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 7px;
+  width: 6px;
+  height: 12px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.custom-checkbox:checked::after {
+  opacity: 1;
+}
+
+
+
+</style>
+</head>
+<body>
+  <!--Блок уведомлений-->
+  <div id="notification" style="
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: none;
+  z-index: 10000;
+  max-width: 90%;
+  text-align: center;
+"></div>
+
+
+  <div class="container">
+    <h1>Калькулятор неоновых вывесок</h1>
+    <div id="calculator-tabs" style="text-align: center; margin-bottom: 20px;">
+      <button class="tab-button active" data-calculator="neon-calculator" onclick="window.location.href='/neon.html'">Неоновая вывеска</button>
+      <button class="tab-button" data-calculator="mirror-calculator" onclick="window.location.href='/index.html'">Зеркало с подсветкой</button>
+      <button class="tab-button" data-calculator="kontur-calculator" onclick="window.location.href='/kontur.html'">Контур</button>
+      <button class="tab-button" data-calculator="lightbox-calculator" onclick="window.location.href='/lightbox/lightbox.html'">Световой лайтбокс</button>
+    </div>
+<div id="mirror-calculator" class="calculator-section active">
+    <form id="calcForm" autocomplete="off">
+      <div class="form-group">
+        <label for="height">Высота (см)</label>
+        <input type="number" id="height" min="0" />
+      </div>
+      <div class="form-group">
+        <label for="width">Ширина (см)</label>
+        <input type="number" id="width" min="0" />
+      </div>
+      <div class="form-group">
+        <label for="substrateType">Тип подложки</label>
+        <select id="substrateType">
+          <option>ПВХ</option>
+          <option>Композит</option>
+          <option>Акрил</option>
+        </select> 
+      </div>
+      <div class="form-group">
+      <label for="tapeType1">Выбор ленты 1</label>
+      <select id="tapeType1">
+        <option>Standart Neon</option>
+        <option>RGB</option>
+        <option>Smart</option>
+      </select>
+    </div>
+    <div class="form-group">
+    <label for="tapeType2">Выбор ленты 2</label>
+      <select id="tapeType2">
+        <option>Standart Neon</option>
+        <option>RGB</option>
+        <option>Smart</option>
+      </select>
+     </div>
+     <div class="form-group">
+      <label for="tapeLength1">Метраж 1 (м)</label>
+      <input type="number" id="tapeLength1" min="0" step="0.1" />
+     </div>
+     <div class="form-group">
+      <label for="tapeLength2">Метраж 2 (м)</label>
+      <input type="number" id="tapeLength2" min="0" step="0.1" />
+     </div>
+      <div class="form-group">
+        <label for="mounts">Крепежи</label>
+        <select id="mounts">
+           <option>Металлические (шт.)</option>
+           <option>Цепи (м.)</option>
+           <option>Подставка (шт.)</option>
+           <option>Липучки (шт.)</option>
+           <option>Тросы (м.)</option>
+        </select>
+      </div>
+      <div class="form-group">
+      <label for="mountCount">Кол-во крепежей (шт./метров)</label>
+      <input type="number" id="mountCount" min="0" />
+      </div>
+      <div class="form-group">
+        <div class="checkbox-row">
+          <label for="waterProtection" class="checkbox-label">Влагозащита</label>
+          <input type="checkbox" id="waterProtection" class="custom-checkbox" />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="checkbox-row">
+          <label for="print" class="checkbox-label">Печать на акриле</label>
+          <input type="checkbox" id="print" class="custom-checkbox" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="remote">Пульт</label>
+        <select id="remote">
+          <option>Без пульта</option>
+          <option>Пульт обычный</option>
+          <option>Пульт WiFi</option>
+          <option>Пульт сенсорный</option>
+          <option>Пульт максимальный</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="elementsCount1">Кол-во элементов 1</label>
+        <input type="number" id="elementsCount1" min="0" />
+      </div>
+      <div class="form-group">
+        <label for="elementsCount2">Кол-во элементов 2</label>
+        <input type="number" id="elementsCount2" min="0" />
+      </div>
+      <div class="form-group">
+      <label for="neonWidth1">Ширина неона 1</label>
+      <select id="neonWidth1">
+          <option>6 мм.</option>
+          <option>8 мм.</option>
+          <option>12 мм.</option>
+      </select>
+      </div>
+      <div class="form-group">
+        <label for="neonWidth2">Ширина неона 2</label>
+        <select id="neonWidth2">
+          <option>6 мм.</option>
+          <option>8 мм.</option>
+          <option>12 мм.</option>
+        </select>
+      </div>
+
+
+<div class="form-group">
+  <label for="filmOption">Доп. покрытие:</label>
+  <select id="filmOption">
+    <option value="">-</option>  <!-- Этот параметр менять нельзя -->
+    <option value="Плёнка фон">Плёнка фон</option>
+    <option value="Плёнка печать">Плёнка печать</option>
+  </select>
+</div>
+
+<div id="filmSizeBlock" style="display: none; margin-top: 10px;">
+  <label>Размер покрытия (см):</label>
+  <div style="display: flex; gap: 10px; margin-top: 5px;">
+    <input type="number" id="filmWidth" placeholder="Ширина" min="0" style="width: 100px;">
+    <input type="number" id="filmHeight" placeholder="Высота" min="0" style="width: 100px;">
+  </div>
+</div>
+
+
+
+
+      <button type="button" id="calculateBtn">Рассчитать</button>
+
+      <!-- Кнопка для показа деталей -->
+<button type="button" id="showDetailsBtn" style="margin-top: 20px;">Показать детальную стоимость</button>
+
+<!-- Контейнер для детальной стоимости (по умолчанию скрыт) -->
+<div id="detailsContainer" style="
+  position: relative;
+  margin-top: 10px;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  color: #333;
+  display: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-size: 14px;
+  max-width: 600px;
+">
+ <button id="closeDetailsBtn" style="
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    color: #555;
+    outline: none;
+    text-shadow: none;
+    box-shadow: none;
+  ">&times;</button>
+
+
+  <div id="detailsContent"></div>
+</div>
+
+
+    </form>
+
+    <div id="result">Итог : <span id="totalSum">0</span> ₴</div>
+  </div>
+</div>
+
+<script>
+  const initialParams = {
+  heightCm: 0,
+  widthCm: 0,
+  substrateType: "Акрил",
+  tapeType1: "Standart Neon",
+  tapeType2: "Standart Neon",
+  tapeLength1: 0,
+  tapeLength2: 0,
+  mounts: "Металлические (шт.)",
+  mountCount: 0,
+  waterProtection: false,
+  print: false,
+  remote: "Без пульта",
+  elementsCount1: 0,
+  elementsCount2: 0,
+  neonWidth1: "6 мм.",
+  neonWidth2: "6 мм.",
+};
+
+function setInitialValues() {
+  document.getElementById('height').value = initialParams.heightCm;
+  document.getElementById('width').value = initialParams.widthCm;
+  document.getElementById('substrateType').value = initialParams.substrateType;
+  document.getElementById('tapeType1').value = initialParams.tapeType1;
+  document.getElementById('tapeType2').value = initialParams.tapeType2;
+  document.getElementById('tapeLength1').value = initialParams.tapeLength1;
+  document.getElementById('tapeLength2').value = initialParams.tapeLength2;
+  document.getElementById('mounts').value = initialParams.mounts;
+  document.getElementById('mountCount').value = initialParams.mountCount;
+  document.getElementById('waterProtection').checked = initialParams.waterProtection;
+  document.getElementById('print').checked = initialParams.print;
+  document.getElementById('remote').value = initialParams.remote;
+  document.getElementById('elementsCount1').value = initialParams.elementsCount1;
+  document.getElementById('elementsCount2').value = initialParams.elementsCount2;
+  document.getElementById('neonWidth1').value = initialParams.neonWidth1;
+  document.getElementById('neonWidth2').value = initialParams.neonWidth2;
+}
+
+  // Вызов при загрузке страницы
+  setInitialValues();
+
+</script>
+  <script>
+document.querySelectorAll('input[type="number"]').forEach(input => {
+  input.addEventListener('focus', () => {
+    if (input.value === '0') {
+      input.value = '';
+    }
+  });
+
+  input.addEventListener('blur', () => {
+    if (input.value === '') {
+      input.value = '0';
+    }
+  });
+});
+</script>
+<script src="neon.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</body>
+</html>
